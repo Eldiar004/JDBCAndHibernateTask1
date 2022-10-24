@@ -1,11 +1,13 @@
 package peaksoft.service;
 
 import peaksoft.model.User;
+import peaksoft.util.Util;
 
+import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class UserServiceImpl implements UserService {
-
     public void createUsersTable() {
 
     }
@@ -26,6 +28,8 @@ public class UserServiceImpl implements UserService {
         return null;
     }
 
+
     public void cleanUsersTable() {
+
     }
 }

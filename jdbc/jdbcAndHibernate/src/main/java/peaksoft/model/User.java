@@ -1,10 +1,11 @@
 package peaksoft.model;
 
 import javax.persistence.*;
-
-@Table
+@Entity
+@Table(name = "users")
 public class User {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column
@@ -16,7 +17,7 @@ public class User {
     @Column
     private Byte age;
 
-    public User() {
+    public User(long id, String name, String lastName, byte age) {
     }
 
     public User(String name, String lastName, Byte age) {
@@ -57,4 +58,15 @@ public class User {
         this.age = age;
     }
 
+    public User() {
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "name='" + name + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", age=" + age +
+                '}';
+    }
 }
