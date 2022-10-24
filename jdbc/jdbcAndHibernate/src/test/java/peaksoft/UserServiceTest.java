@@ -10,7 +10,7 @@ import java.util.List;
 
 public class UserServiceTest {
 
-    private final UserService userService = new UserServiceImpl();
+    private final UserServiceImpl userService = new UserServiceImpl();
 
     private final String testName = "Kanat";
     private final String testLastName = "Subanov";

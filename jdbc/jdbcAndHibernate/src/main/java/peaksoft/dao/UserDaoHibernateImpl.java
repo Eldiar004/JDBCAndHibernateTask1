@@ -2,31 +2,23 @@ package peaksoft.dao;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.cfg.beanvalidation.HibernateTraversableResolver;
 import peaksoft.model.User;
 import peaksoft.util.HibernateUtil;
-import peaksoft.util.Util;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class UserDaoHibernateImpl implements UserDao {
     UserDaoJdbcImpl userDaoJdbc = new UserDaoJdbcImpl();
 
     public UserDaoHibernateImpl() {
-
     }
 
     @Override
     public void createUsersTable() {
-        String create = "create table users(" +
+        String create = "create table if not exists users(" +
                 "id serial primary key ," +
                 "name varchar not null ," +
                 "lastName varchar not null ," +
-                "age int)";
+                "age smallint)";
         try{
             Session session = HibernateUtil.getSessionFactory().openSession();
             session.getTransaction().begin();
@@ -37,16 +29,15 @@ public class UserDaoHibernateImpl implements UserDao {
         } catch (HibernateException e) {
             System.out.println(e.getMessage());
         }
-
     }
 
 
     @Override
     public void dropUsersTable() {
-        String delete = "drop table users;";
+        String delete = "drop table if exists users";
         try (Session session = HibernateUtil.getSessionFactory().openSession()){
             session.getTransaction().begin();
-            session.createSQLQuery(delete);
+            session.createSQLQuery(delete).executeUpdate();
             session.getTransaction().commit();
             session.close();
         }
@@ -58,9 +49,8 @@ public class UserDaoHibernateImpl implements UserDao {
     @Override
     public void saveUser(String name, String lastName, byte age) {
         try(Session session = HibernateUtil.getSessionFactory().openSession()) {
-            session.getTransaction().begin();
-            User user = new User(name , lastName , age);
-            session.persist(user);
+            session.beginTransaction();
+            session.persist(new User(name , lastName , age));
             session.getTransaction().commit();
             session.close();
         }
@@ -74,9 +64,8 @@ public class UserDaoHibernateImpl implements UserDao {
         try (Session session = HibernateUtil.getSessionFactory().openSession()){
             session.getTransaction().begin();
             User user = session.find(User.class , id);
-            session.delete(user);
+            session.remove(user);
             session.getTransaction().commit();
-            session.close();
         }
         catch (HibernateException e) {
             System.out.println(e.getMessage());
@@ -85,13 +74,12 @@ public class UserDaoHibernateImpl implements UserDao {
 
     @Override
     public List<User> getAllUsers() {
-        String select = "select * from users";
-        List<User> list;
+        String select = "select *  from users ";
+        List<User> list = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()){
             session.getTransaction().begin();
-            list = session.createQuery(select).list();
+            list = session.createSQLQuery(select).getResultList();
             session.getTransaction().commit();
-            session.close();
 
         }
         return list;
@@ -102,9 +90,9 @@ public class UserDaoHibernateImpl implements UserDao {
         String truncate = "truncate table users";
         try (Session session = HibernateUtil.getSessionFactory().openSession()){
             session.getTransaction().begin();
-            session.createSQLQuery(truncate);
+            session.createSQLQuery(truncate).executeUpdate();
             session.getTransaction().commit();
-            session.close();
+
         }
         catch (HibernateException e){
             System.out.println(e.getMessage());

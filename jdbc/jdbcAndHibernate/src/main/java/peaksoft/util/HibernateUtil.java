@@ -14,7 +14,7 @@ public class HibernateUtil {
         properties.put(Environment.URL, "jdbc:postgresql://localhost:5432/homework5");
         properties.put(Environment.USER, "postgres");
         properties.put(Environment.PASS, "1234");
-        properties.put(Environment.HBM2DDL_AUTO, "create");
+        properties.put(Environment.HBM2DDL_AUTO, "update");
         properties.put(Environment.DIALECT, "org.hibernate.dialect.PostgreSQL9Dialect");
         properties.put(Environment.SHOW_SQL, "true");
         Configuration configuration = new Configuration();
